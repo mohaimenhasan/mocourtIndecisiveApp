@@ -1,0 +1,12 @@
+{
+  "name": "mocourt",
+  "displayName": "mocourt",
+  "expo": {
+    "name": "mocourt",
+    "slug": "mocourt",
+    "version": "1.0.0",
+    "assetBundlePatterns": [
+      "**/*"
+    ]
+  }
+}
