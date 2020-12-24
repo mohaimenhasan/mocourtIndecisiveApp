@@ -2,25 +2,56 @@ import { StatusBar } from 'expo-status-bar';
 import React from 'react';
 import { Button, Alert, Image, StyleSheet, Text, View } from 'react-native';
 
-export default function App() {
+let api ='https://yesno.wtf/api/';
+
+export default class App extends React.Component {
+
+  constructor(props){
+    super(props);
+    this.state = {
+      answer: "",
+      image: "",
+    }
+  } 
   
-  let pic = {
-    uri: 'https://yesno.wtf/assets/yes/12-e4f57c8f172c51fdd983c2837349f853.gif'
-    };
-  return (
-    <View style={styles.container}>
-      <Text>Ask me a question and tap the button below.</Text>
-      <Button
-        onPress={() => {
-            Alert.alert('Yes!');
-        }}
-        title="Tap Me"
-        style={styles.button}
+  async componentDidMount() {
+    this.fetchData();
+  }
+
+  async fetchData() {
+    try {
+        const response = await fetch(api);
+        if (!response.ok) {
+        throw Error(response.statusText);
+        }
+        const json = await response.json();
+        this.setState({
+        answer: json.answer,
+        image: json.image,
+        });
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+
+  render(){
+    return (
+      <View style={styles.container}>
+        <Text>Ask me a question and tap the button below.</Text>
+        <Button
+          onPress={() => {
+          this.fetchData();
+          }}
+          title="Tap Me"
+          style={styles.button}
         />
-       <Image source={pic} style={{width: 193, height: 110}}/>
-      <StatusBar style="auto" />
-    </View>
-  );
+        <Text style={styles.answer}>{this.state.answer}</Text>
+        <Image source={{uri:this.state.image}} style={styles.image}>
+        </Image>
+        </View>
+    );
+  }
 }
 
 const styles = StyleSheet.create({
@@ -38,5 +69,11 @@ const styles = StyleSheet.create({
   image: {
   width: 193,
   height: 110
-  }
+  },
+  answer: {
+    textAlign: 'center',
+    color: 'white',
+    fontSize: 32,
+    textTransform: 'uppercase'
+    },
 });
